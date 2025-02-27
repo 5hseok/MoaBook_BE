@@ -36,5 +36,6 @@ public class Group {
     public void changeName(String newName) {
         this.name = newName;
     }
+    public void changeColor(String newColor) {this.color = newColor;}
 
 }
