@@ -73,13 +73,13 @@ public class PageController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping
+    @GetMapping("/{bookId}/{pageNumber}")
     public ResponseEntity<SuccessStatusResponse<SelectPageResponseDto>> select(
             @RequestHeader("Authorization") String token,
-            @Valid @RequestBody SelectPageRequestDto selectPageRequestDto) {
+            @Valid @PathVariable Long bookId, @Valid @PathVariable Long pageNumber) {
 
         Long userId = jwtTokenProvider.getUserFromJwt(token);
-        SelectPageResponseDto selectPageResponseDto = pageService.selectPage(userId, selectPageRequestDto);
+        SelectPageResponseDto selectPageResponseDto = pageService.selectPage(userId, bookId,pageNumber);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 SuccessStatusResponse.of(SuccessMessage.SELECT_PAGE_SUCCESS, selectPageResponseDto)
@@ -93,13 +93,13 @@ public class PageController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/all")
+    @GetMapping("/all/{bookId}")
     public ResponseEntity<SuccessStatusResponse<SelectAllPageResponseDto>> selectAll(
             @RequestHeader("Authorization") String token,
-            @Valid @RequestBody SelectAllPageRequestDto selectAllPageRequestDto) {
+            @Valid @PathVariable Long bookId) {
 
         Long userId = jwtTokenProvider.getUserFromJwt(token);
-        SelectAllPageResponseDto selectAllPageResponseDto = pageService.selectAllPage(userId, selectAllPageRequestDto);
+        SelectAllPageResponseDto selectAllPageResponseDto = pageService.selectAllPage(userId, bookId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 SuccessStatusResponse.of(SuccessMessage.SELECT_PAGE_SUCCESS, selectAllPageResponseDto)

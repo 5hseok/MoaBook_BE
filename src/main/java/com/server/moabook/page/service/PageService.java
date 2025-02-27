@@ -13,6 +13,7 @@ import com.server.moabook.page.dto.response.SelectAllPageResponseDto;
 import com.server.moabook.page.dto.response.SelectPageResponseDto;
 import com.server.moabook.page.repository.PageRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,12 +46,17 @@ public class PageService {
         pageRepository.save(page);
     }
 
-    public SelectPageResponseDto selectPage(Long userId, SelectPageRequestDto selectPageRequestDto){
+    public SelectPageResponseDto selectPage(
+            Long userId,
+            @NotNull(message = "책의 아이디는 비어있을 수 없습니다.")
+            Long bookId,
+            @NotNull(message = "페이지의 숫자는 비어있을 수 없습니다.")
+            Long pageNumber){
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
         Page page = pageRepository.findByBook_IdAndPageNumber(
-                selectPageRequestDto.bookId(),
-                selectPageRequestDto.pageNumber()
+                bookId,
+                pageNumber
         );
         if(page.getClass() == null){
             throw new NotFoundException(ErrorMessage.PAGE_NOT_FOUND);
@@ -58,10 +64,10 @@ public class PageService {
         return PageMapper.toDTO(page);
     }
 
-    public SelectAllPageResponseDto selectAllPage(Long userId, SelectAllPageRequestDto selectAllPageRequestDto){
+    public SelectAllPageResponseDto selectAllPage(Long userId, @NotNull(message = "책의 아이디는 비어있을 수 없습니다.") Long bookId){
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
-        Book book = bookRepository.findById(selectAllPageRequestDto.bookId())
+        Book book = bookRepository.findById(bookId)
             .orElseThrow(()-> new IllegalStateException(String.valueOf(ErrorMessage.BOOK_NOT_FOUND)));
         return PageMapper.AlltoDTO(book);
     }
