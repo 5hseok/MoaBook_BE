@@ -28,6 +28,7 @@ public class GroupMapper {
 
     public static void update(Group group, UpdateGroupRequestDto updateGroupRequestDto) {
         group.changeName(updateGroupRequestDto.name());
+        group.changeColor(updateGroupRequestDto.color());
     }
 
 }
