@@ -2,7 +2,6 @@ package com.server.moabook.book.controller;
 
 import com.server.moabook.book.dto.request.CreateBookRequestDto;
 import com.server.moabook.book.dto.request.DeleteBookRequestDto;
-import com.server.moabook.book.dto.request.SelectBookRequestDto;
 import com.server.moabook.book.dto.request.UpdateBookRequestDto;
 import com.server.moabook.book.dto.response.SelectBookResponseDto;
 import com.server.moabook.book.service.BookService;
@@ -48,6 +47,7 @@ public class BookController {
         );
     }
 
+    @GetMapping("/{groupId}")
     @Operation(summary = "책 조회", description = "책 정보를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "책 조회 성공"),
@@ -55,7 +55,6 @@ public class BookController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping
     public ResponseEntity<SuccessStatusResponse<SelectBookResponseDto>> select(@RequestHeader("Authorization") String token,
                                                                                     @Valid @PathVariable("groupId") Long groupId){
 

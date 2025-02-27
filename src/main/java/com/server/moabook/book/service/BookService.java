@@ -4,7 +4,6 @@ import com.server.moabook.book.domain.Book;
 import com.server.moabook.book.dto.BookMapper;
 import com.server.moabook.book.dto.request.CreateBookRequestDto;
 import com.server.moabook.book.dto.request.DeleteBookRequestDto;
-import com.server.moabook.book.dto.request.SelectBookRequestDto;
 import com.server.moabook.book.dto.request.UpdateBookRequestDto;
 import com.server.moabook.book.dto.response.SelectBookResponseDto;
 import com.server.moabook.book.repository.BookRepository;
@@ -14,6 +13,7 @@ import com.server.moabook.group.domain.Group;
 import com.server.moabook.group.repository.GroupRepository;
 import com.server.moabook.oauth2.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public SelectBookResponseDto selectBook(Long userId, Long groupId){
+    public SelectBookResponseDto selectBook(Long userId, @NotNull(message = "그룹이 없을 수 없습니다.") Long groupId){
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
         Group group = groupRepository.findById(groupId)
