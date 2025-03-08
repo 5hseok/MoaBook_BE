@@ -69,7 +69,7 @@ public class PageService {
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
         Book book = bookRepository.findById(bookId)
             .orElseThrow(()-> new IllegalStateException(String.valueOf(ErrorMessage.BOOK_NOT_FOUND)));
-        return PageMapper.AlltoDTO(book);
+        return PageMapper.allPageResponseDto(book);
     }
 
     public void deletePage(Long userId, DeletePageRequestDto deletePageRequestDto){

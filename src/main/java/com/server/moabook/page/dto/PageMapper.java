@@ -45,7 +45,7 @@ public class PageMapper {
         return new SelectPageResponseDto(elementDtos);
     }
 
-    public static SelectAllPageResponseDto AlltoDTO(Book book) {
+    public static SelectAllPageResponseDto allPageResponseDto(Book book) {
         List<PageDto> pageDtos = book.getPages().stream().map(page -> {
             List<ElementDto> elementDtos = page.getElements().stream()
                     .map(element -> new ElementDto(
