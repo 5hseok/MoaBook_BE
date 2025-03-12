@@ -1,9 +1,9 @@
 package com.server.moabook.page.controller;
 
 import com.server.moabook.page.dto.request.*;
-import com.server.moabook.global.exception.dto.SuccessStatusResponse;
-import com.server.moabook.global.exception.message.SuccessMessage;
-import com.server.moabook.global.jwt.JwtTokenProvider;
+import com.server.moabook.core.exception.dto.SuccessStatusResponse;
+import com.server.moabook.core.exception.message.SuccessMessage;
+import com.server.moabook.core.security.jwt.JwtTokenProvider;
 import com.server.moabook.page.dto.response.CreatePageResponseDto;
 import com.server.moabook.page.dto.response.SelectAllPageResponseDto;
 import com.server.moabook.page.dto.response.SelectPageResponseDto;
@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

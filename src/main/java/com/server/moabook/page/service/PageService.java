@@ -2,9 +2,9 @@ package com.server.moabook.page.service;
 
 import com.server.moabook.book.domain.Book;
 import com.server.moabook.book.repository.BookRepository;
-import com.server.moabook.global.exception.NotFoundException;
-import com.server.moabook.global.exception.message.ErrorMessage;
-import com.server.moabook.oauth2.repository.UserRepository;
+import com.server.moabook.core.exception.NotFoundException;
+import com.server.moabook.core.exception.message.ErrorMessage;
+import com.server.moabook.user.repository.UserRepository;
 import com.server.moabook.page.domain.Element;
 import com.server.moabook.page.domain.Page;
 import com.server.moabook.page.dto.PageMapper;

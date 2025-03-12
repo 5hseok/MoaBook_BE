@@ -1,8 +1,8 @@
 package com.server.moabook.user.controller;
 
-import com.server.moabook.global.exception.dto.SuccessStatusResponse;
-import com.server.moabook.global.exception.message.SuccessMessage;
-import com.server.moabook.global.jwt.JwtTokenProvider;
+import com.server.moabook.core.exception.dto.SuccessStatusResponse;
+import com.server.moabook.core.exception.message.SuccessMessage;
+import com.server.moabook.core.security.jwt.JwtTokenProvider;
 import com.server.moabook.user.dto.response.SelectUserResponseDto;
 import com.server.moabook.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -4,14 +4,14 @@ import com.server.moabook.group.domain.Group;
 import com.server.moabook.group.dto.request.CreateGroupRequestDto;
 import com.server.moabook.group.dto.request.UpdateGroupRequestDto;
 import com.server.moabook.group.dto.response.SelectGroupResponseDto;
-import com.server.moabook.oauth2.entity.SocialUserEntity;
+import com.server.moabook.user.domain.GeneralMember;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GroupMapper {
 
-    public static Group toEntity(CreateGroupRequestDto createGroupRequestDto, SocialUserEntity user){
+    public static Group toEntity(CreateGroupRequestDto createGroupRequestDto, GeneralMember user){
         return Group.builder()
             .name(createGroupRequestDto.name())
             .color(createGroupRequestDto.color())
@@ -19,8 +19,8 @@ public class GroupMapper {
             .build();
     }
 
-    public static SelectGroupResponseDto toDTO(SocialUserEntity socialUserEntity) {
-        List<GroupDto> groupDtos = socialUserEntity.getGroups().stream()
+    public static SelectGroupResponseDto toDTO(GeneralMember generalMember) {
+        List<GroupDto> groupDtos = generalMember.getGroups().stream()
                 .map(group -> new GroupDto(group.getGroupId(), group.getName(), group.getColor()))
                 .collect(Collectors.toList());
         return new SelectGroupResponseDto(groupDtos);

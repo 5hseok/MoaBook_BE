@@ -1,8 +1,8 @@
 package com.server.moabook.group.controller;
 
-import com.server.moabook.global.exception.dto.SuccessStatusResponse;
-import com.server.moabook.global.exception.message.SuccessMessage;
-import com.server.moabook.global.jwt.JwtTokenProvider;
+import com.server.moabook.core.exception.dto.SuccessStatusResponse;
+import com.server.moabook.core.exception.message.SuccessMessage;
+import com.server.moabook.core.security.jwt.JwtTokenProvider;
 import com.server.moabook.group.dto.request.CreateGroupRequestDto;
 import com.server.moabook.group.dto.request.DeleteGroupRequestDto;
 import com.server.moabook.group.dto.request.UpdateGroupRequestDto;

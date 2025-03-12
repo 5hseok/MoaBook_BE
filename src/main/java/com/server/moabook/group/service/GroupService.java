@@ -1,7 +1,7 @@
 package com.server.moabook.group.service;
 
-import com.server.moabook.global.exception.NotFoundException;
-import com.server.moabook.global.exception.message.ErrorMessage;
+import com.server.moabook.core.exception.NotFoundException;
+import com.server.moabook.core.exception.message.ErrorMessage;
 import com.server.moabook.group.domain.Group;
 import com.server.moabook.group.dto.GroupMapper;
 import com.server.moabook.group.dto.request.CreateGroupRequestDto;
@@ -9,8 +9,8 @@ import com.server.moabook.group.dto.request.DeleteGroupRequestDto;
 import com.server.moabook.group.dto.request.UpdateGroupRequestDto;
 import com.server.moabook.group.dto.response.SelectGroupResponseDto;
 import com.server.moabook.group.repository.GroupRepository;
-import com.server.moabook.oauth2.entity.SocialUserEntity;
-import com.server.moabook.oauth2.repository.UserRepository;
+import com.server.moabook.user.domain.GeneralMember;
+import com.server.moabook.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,16 +24,16 @@ public class GroupService {
     private final UserRepository userRepository;
 
     public void createGroup(Long userId, CreateGroupRequestDto createGroupRequestDto){
-        SocialUserEntity user = userRepository.findById(userId)
+        GeneralMember user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
         Group group = GroupMapper.toEntity(createGroupRequestDto,user);
         groupRepository.save(group);
     }
 
     public SelectGroupResponseDto selectGroup(Long userId){
-        SocialUserEntity socialUserEntity = userRepository.findById(userId)
+        GeneralMember generalMember = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
-        return GroupMapper.toDTO(socialUserEntity);
+        return GroupMapper.toDTO(generalMember);
     }
 
     public void updateGroup(Long userId, UpdateGroupRequestDto updateGroupRequestDto){

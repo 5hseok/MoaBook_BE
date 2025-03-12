@@ -1,12 +1,10 @@
 package com.server.moabook.group.domain;
 
 import com.server.moabook.book.domain.Book;
-import com.server.moabook.oauth2.entity.SocialUserEntity;
+import com.server.moabook.user.domain.GeneralMember;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class Group {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private SocialUserEntity user;
+    private GeneralMember user;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Book> books;
