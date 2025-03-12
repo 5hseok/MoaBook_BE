@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.List;
 
 @Entity
-@Table(name = "Books")
+@Table(name = "book_groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class Group {
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private SocialUserEntity user;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)

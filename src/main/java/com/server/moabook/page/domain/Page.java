@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "page")
+@Table(name = "pages")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -18,11 +18,11 @@ public class Page {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pageId;
 
-    @Column(unique=true)
+    @Column(name = "page_number")
     private Long pageNumber;
 
     @ManyToOne
-    @JoinColumn(name = "bookId")
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @OneToMany(mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true)

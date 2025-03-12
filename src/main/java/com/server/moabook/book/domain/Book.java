@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.List;
 
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -26,7 +26,7 @@ public class Book {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "groupId")
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "element")
+@Table(name = "elements")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,7 +29,7 @@ public class Element {
     private String thumbnailUrl; // og:image
 
     @ManyToOne
-    @JoinColumn(name = "pageId")
+    @JoinColumn(name = "page_id")
     private Page page;
 
     //==== 메서드 예시 ====//
