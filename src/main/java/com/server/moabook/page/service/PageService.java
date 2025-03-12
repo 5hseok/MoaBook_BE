@@ -9,16 +9,20 @@ import com.server.moabook.oauth2.repository.UserRepository;
 import com.server.moabook.page.domain.Element;
 import com.server.moabook.page.domain.Page;
 import com.server.moabook.page.dto.PageMapper;
+import com.server.moabook.page.dto.response.CreatePageResponseDto;
 import com.server.moabook.page.dto.response.SelectAllPageResponseDto;
 import com.server.moabook.page.dto.response.SelectPageResponseDto;
+import com.server.moabook.page.repository.ElementRepository;
 import com.server.moabook.page.repository.PageRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,23 +31,46 @@ public class PageService {
     private final BookRepository bookRepository;
     private final PageRepository pageRepository;
     private final UserRepository userRepository;
+    private final ElementRepository elementRepository;
 
-    public void createPage(Long userId, CreatePageRequestDto createPageRequestDto){
+    public CreatePageResponseDto createPage(Long userId, Long bookId){
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
-        Book book = bookRepository.findById(createPageRequestDto.bookId())
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.GROUP_NOT_FOUND));
-        Page page = PageMapper.toEntity(book);
+        // bookId를 기준으로 봐서 마지막 page의 번호를 가져오고 그 다음 번호로 pageNumber를 지정 후 저장
+        Long existMaxPageNumber = pageRepository.findLastPageNumberByBook(book)
+                .orElseThrow(()-> new NotFoundException(ErrorMessage.BOOK_NOT_FOUND));
+        Page page = PageMapper.toSave(book, existMaxPageNumber + 1);
         pageRepository.save(page);
+
+        return CreatePageResponseDto.builder()
+                .bookId(book.getId())
+                .pageId(page.getPageId())
+                .pageNumber(page.getPageNumber())
+                .build();
     }
 
-    public void savePage(Long userId, SavePageRequestDto savePageRequestDto){
-        userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
-        Book book = bookRepository.findById(savePageRequestDto.bookId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.GROUP_NOT_FOUND));
-        Page page = PageMapper.toSave(book, savePageRequestDto);
-        pageRepository.save(page);
+    public void savePage(Long bookId, Long pageNumber, SavePageRequestDto savePageRequestDto){
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.BOOK_NOT_FOUND));
+        try {
+            Page page = pageRepository.findByBookIdAndPageNumber(book.getId(), pageNumber)
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.PAGE_NOT_FOUND));
+
+            //저장된 page의 id를 이용하여 element를 저장
+            List<Element> elements = savePageRequestDto.elementDtos().stream()
+                    .map(element -> PageMapper.toEntity(page, element))
+                    .toList();
+
+            elementRepository.saveAll(elements);
+        }
+        catch (Exception e){
+            log.info("페이지 저장 실패");
+            log.error(e.getMessage());
+            throw new IllegalStateException(String.valueOf(ErrorMessage.PAGE_NOT_FOUND));
+        }
     }
 
     public SelectPageResponseDto selectPage(
@@ -54,13 +81,11 @@ public class PageService {
             Long pageNumber){
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
-        Page page = pageRepository.findByBook_IdAndPageNumber(
+        Page page = pageRepository.findByBookIdAndPageNumber(
                 bookId,
                 pageNumber
-        );
-        if(page.getClass() == null){
-            throw new NotFoundException(ErrorMessage.PAGE_NOT_FOUND);
-        }
+        ).orElseThrow(()-> new NotFoundException(ErrorMessage.PAGE_NOT_FOUND));
+
         return PageMapper.toDTO(page);
     }
 
@@ -72,12 +97,12 @@ public class PageService {
         return PageMapper.allPageResponseDto(book);
     }
 
-    public void deletePage(Long userId, DeletePageRequestDto deletePageRequestDto){
+    public void deletePage(Long userId, Long bookId, Long pageNumber){
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
-        bookRepository.findById(deletePageRequestDto.bookId())
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.GROUP_NOT_FOUND));
-        Page page = pageRepository.findById(deletePageRequestDto.pageId())
+        Page page = pageRepository.findByBookIdAndPageNumber(book.getId(), pageNumber)
                 .orElseThrow(()-> new NotFoundException(ErrorMessage.PAGE_NOT_FOUND));
         pageRepository.delete(page);
     }

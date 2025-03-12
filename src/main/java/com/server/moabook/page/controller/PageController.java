@@ -4,6 +4,7 @@ import com.server.moabook.page.dto.request.*;
 import com.server.moabook.global.exception.dto.SuccessStatusResponse;
 import com.server.moabook.global.exception.message.SuccessMessage;
 import com.server.moabook.global.jwt.JwtTokenProvider;
+import com.server.moabook.page.dto.response.CreatePageResponseDto;
 import com.server.moabook.page.dto.response.SelectAllPageResponseDto;
 import com.server.moabook.page.dto.response.SelectPageResponseDto;
 import com.server.moabook.page.service.PageService;
@@ -15,11 +16,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/page")
+@RequestMapping("/{bookId}/page")
 @Tag(name = "Page", description = "페이지(Page) 관련 API")
 public class PageController {
 
@@ -34,15 +36,16 @@ public class PageController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PostMapping
-    public ResponseEntity<SuccessStatusResponse<Void>> create(
+    public ResponseEntity<SuccessStatusResponse<CreatePageResponseDto>> create(
             @RequestHeader("Authorization") String token,
-            @Valid @RequestBody CreatePageRequestDto createPageRequestDto) {
+            @PathVariable("bookId") Long bookId
+    ) {
 
         Long userId = jwtTokenProvider.getUserFromJwt(token);
-        pageService.createPage(userId, createPageRequestDto);
+        CreatePageResponseDto createPageResponseDto = pageService.createPage(userId, bookId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                SuccessStatusResponse.of(SuccessMessage.CREATE_PAGE_SUCCESS, null)
+                SuccessStatusResponse.of(SuccessMessage.CREATE_PAGE_SUCCESS, createPageResponseDto)
         );
     }
 
@@ -53,13 +56,16 @@ public class PageController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @PostMapping("/save")
+    @PostMapping("/{pageNumber}")
     public ResponseEntity<SuccessStatusResponse<Void>> save(
             @RequestHeader("Authorization") String token,
+            @PathVariable("bookId") Long bookId,
+            @PathVariable("pageNumber") Long pageNumber,
             @Valid @RequestBody SavePageRequestDto savePageRequestDto) {
 
-        Long userId = jwtTokenProvider.getUserFromJwt(token);
-        pageService.savePage(userId, savePageRequestDto);
+        jwtTokenProvider.validateToken(token);
+
+        pageService.savePage(bookId, pageNumber, savePageRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 SuccessStatusResponse.of(SuccessMessage.SAVE_PAGE_SUCCESS, null)
@@ -73,7 +79,7 @@ public class PageController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/{bookId}/{pageNumber}")
+    @GetMapping("/{pageNumber}")
     public ResponseEntity<SuccessStatusResponse<SelectPageResponseDto>> select(
             @RequestHeader("Authorization") String token,
             @Valid @PathVariable Long bookId, @Valid @PathVariable Long pageNumber) {
@@ -93,7 +99,7 @@ public class PageController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/all/{bookId}")
+    @GetMapping("/all")
     public ResponseEntity<SuccessStatusResponse<SelectAllPageResponseDto>> selectAll(
             @RequestHeader("Authorization") String token,
             @Valid @PathVariable Long bookId) {
@@ -113,13 +119,15 @@ public class PageController {
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @DeleteMapping
+    @DeleteMapping("/{pageNumber}")
     public ResponseEntity<SuccessStatusResponse<Void>> delete(
             @RequestHeader("Authorization") String token,
-            @Valid @RequestBody DeletePageRequestDto deletePageRequestDto) {
+            @PathVariable("bookId") Long bookId,
+            @PathVariable("pageNumber") Long pageNumber
+            ) {
 
         Long userId = jwtTokenProvider.getUserFromJwt(token);
-        pageService.deletePage(userId, deletePageRequestDto);
+        pageService.deletePage(userId, bookId, pageNumber);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 SuccessStatusResponse.of(SuccessMessage.DELETE_PAGE_SUCCESS, null)
