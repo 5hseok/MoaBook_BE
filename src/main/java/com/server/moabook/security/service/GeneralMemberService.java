@@ -38,8 +38,8 @@ public class GeneralMemberService {
     }
 
     public static String refineToken(String accessToken) {
-        return accessToken.startsWith("Bearer")
-                ? accessToken.substring(6)
+        return accessToken.startsWith("Bearer ")
+                ? accessToken.substring(7)
                 : accessToken;
     }
 
