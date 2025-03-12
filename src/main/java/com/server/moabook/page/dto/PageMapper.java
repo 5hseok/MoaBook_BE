@@ -4,24 +4,17 @@ package com.server.moabook.page.dto;
 import com.server.moabook.book.domain.Book;
 import com.server.moabook.page.domain.Element;
 import com.server.moabook.page.domain.Page;
-import com.server.moabook.page.dto.request.SavePageRequestDto;
 import com.server.moabook.page.dto.response.SelectAllPageResponseDto;
 import com.server.moabook.page.dto.response.SelectPageResponseDto;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PageMapper {
 
-    public static Page toEntity(Book book) {
-        return Page.builder()
-                .book(book)
-                .build();
-    }
-
-    public static Element toEntity(ElementDto elementDto) {
+    public static Element toEntity(Page page, ElementDto elementDto) {
         return Element.builder()
+                .page(page)
                 .elementType(elementDto.elementType())
                 .xPosition(elementDto.xPosition())
                 .yPosition(elementDto.yPosition())
@@ -29,18 +22,17 @@ public class PageMapper {
                 .build();
     }
 
-    public static Page toSave(Book book, SavePageRequestDto savePageRequestDto){
+    public static Page toSave(Book book, Long pageNumber){
         return Page.builder()
-                .pageNumber(savePageRequestDto.pageNumber())
                 .book(book)
-                .elements(Collections.singletonList(toEntity(savePageRequestDto.elementDto())))
+                .pageNumber(pageNumber)
                 .build();
     }
 
     public static SelectPageResponseDto toDTO(Page page) {
         List<ElementDto> elementDtos = page.getElements().stream()
                 .map(element ->
-                        new ElementDto(element.getElementId(), element.getElementType(), element.getXPosition(), element.getYPosition(), element.getContent()))
+                        new ElementDto(element.getElementType(), element.getXPosition(), element.getYPosition(), element.getContent()))
                 .collect(Collectors.toList());
         return new SelectPageResponseDto(elementDtos);
     }
@@ -49,7 +41,6 @@ public class PageMapper {
         List<PageDto> pageDtos = book.getPages().stream().map(page -> {
             List<ElementDto> elementDtos = page.getElements().stream()
                     .map(element -> new ElementDto(
-                            element.getElementId(),
                             element.getElementType(),
                             element.getXPosition(),
                             element.getYPosition(),

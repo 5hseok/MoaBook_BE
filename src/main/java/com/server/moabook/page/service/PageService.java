@@ -1,7 +1,6 @@
 package com.server.moabook.page.service;
 
 import com.server.moabook.book.domain.Book;
-import com.server.moabook.page.dto.request.*;
 import com.server.moabook.book.repository.BookRepository;
 import com.server.moabook.global.exception.NotFoundException;
 import com.server.moabook.global.exception.message.ErrorMessage;
@@ -9,6 +8,7 @@ import com.server.moabook.oauth2.repository.UserRepository;
 import com.server.moabook.page.domain.Element;
 import com.server.moabook.page.domain.Page;
 import com.server.moabook.page.dto.PageMapper;
+import com.server.moabook.page.dto.request.SavePageRequestDto;
 import com.server.moabook.page.dto.response.CreatePageResponseDto;
 import com.server.moabook.page.dto.response.SelectAllPageResponseDto;
 import com.server.moabook.page.dto.response.SelectPageResponseDto;
