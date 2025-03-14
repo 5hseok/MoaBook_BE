@@ -14,7 +14,8 @@ public enum ErrorMessage {
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 책을 찾을 수 없습니다."),
     PAGE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 페이지를 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "사용자를 찾을 수 없습니다."),
-    INVALID_EMAIL(HttpStatus.BAD_REQUEST.value(), "이메일 형식이 올바르지 않습니다."),;
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST.value(), "이메일 형식이 올바르지 않습니다."),
+    FAIL_TO_FIND_LAST_PAGE_NUMBER(HttpStatus.SERVICE_UNAVAILABLE.value(), "마지막 페이지 번호를 찾을 수 없습니다."),;
     private final int code;
     private final String message;
 }

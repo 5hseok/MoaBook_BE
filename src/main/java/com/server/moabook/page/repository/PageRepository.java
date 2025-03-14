@@ -13,6 +13,6 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     Optional<Page> findByBookIdAndPageNumber(Long bookId, Long pageNumber);
 
-    @Query("SELECT MAX(p.pageNumber) FROM Page p WHERE p.book = :book")
+    @Query("SELECT COALESCE(MAX(p.pageNumber), 0) FROM Page p WHERE p.book = :book")
     Optional<Long> findLastPageNumberByBook(Book book);
 }

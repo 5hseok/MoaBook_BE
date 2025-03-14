@@ -6,14 +6,15 @@ import com.server.moabook.user.service.AuthService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider{
@@ -22,7 +23,6 @@ public class JwtTokenProvider{
 
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 3;
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 14;
-    private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     @Value("${spring.jwt.secret}")
     private String JWT_SECRET;
