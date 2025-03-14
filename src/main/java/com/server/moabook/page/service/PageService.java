@@ -97,11 +97,12 @@ public class PageService {
         return PageMapper.allPageResponseDto(book);
     }
 
+    // 중간 page가 삭제되면 pageNumber를 다시 수정하기
     public void deletePage(Long userId, Long bookId, Long pageNumber) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException(String.valueOf(ErrorMessage.USER_NOT_FOUND)));
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.GROUP_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.BOOK_NOT_FOUND));
         Page page = pageRepository.findByBookIdAndPageNumber(book.getId(), pageNumber)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.PAGE_NOT_FOUND));
         pageRepository.delete(page);
